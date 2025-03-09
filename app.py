@@ -2,6 +2,7 @@ from flask import Flask, request, render_template_string
 from dotenv import load_dotenv
 from langchain.llms import OpenAI
 import os
+import streamlit as st
 
 load_dotenv()
 
@@ -65,4 +66,6 @@ def index():
     return render_template_string(html_template, response=response)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+  #  app.run(debug=True)
+  st.title("My Streamlit App")
+  st.write("Welcome to my app!")
