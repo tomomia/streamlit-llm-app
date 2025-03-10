@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from dotenv import load_dotenv
-from langchain.llms import OpenAI  # 修正: langchain.llms を使用
+from langchain_community.llms import OpenAI  # ✅ 推奨される場所からインポート
 
 # 環境変数を読み込む
 load_dotenv()
@@ -27,11 +27,10 @@ def get_llm_response(prompt, expert):
 
     full_prompt = f"{system_message} {prompt}"
 
-    # OpenAI クラスを使用し、APIキーを明示的に渡す
+    # ✅ langchain_community.llms.OpenAI を使ってAPIキーは自動的に環境変数から読み込む
     llm = OpenAI(
         model_name="gpt-4o",  # 使用するモデル
-        temperature=0.5,
-        openai_api_key=os.environ["OPENAI_API_KEY"]  # 明示的にAPIキーを渡す
+        temperature=0.5
     )
     response = llm(full_prompt)  # プロンプトを直接渡して実行
     
