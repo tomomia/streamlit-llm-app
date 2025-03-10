@@ -1,21 +1,18 @@
 import os
 import streamlit as st
-from dotenv import load_dotenv
 from langchain.llms import OpenAI
 
-# 関数としてAPIキー読み込み
-def get_api_key():
-    load_dotenv()  # 毎回読み込む
-    return os.environ.get("OPENAI_API_KEY")
+# 環境変数確認（デバッグ用、一部だけ表示）
+api_key = os.environ.get("OPENAI_API_KEY")
+st.write("🔑 API Key:", api_key[:5] + "..." if api_key else "❌ None")
 
 # Streamlit UI
 st.title("LLMプロンプトフォーム")
 prompt = st.text_input("プロンプトを入力してください:")
-expert = st.radio("専門家の種類を選んでください", ("犬の専門家", "猫の専門家"))
+expert = st.radio("専門家を選んでください", ("犬の専門家", "猫の専門家"))
 
 # LLM呼び出し関数
 def get_llm_response(prompt, expert):
-    api_key = get_api_key()  # 関数内で毎回読む（安全）
     if not api_key:
         return "❌ APIキーが見つかりません"
 
@@ -23,14 +20,13 @@ def get_llm_response(prompt, expert):
     full_prompt = f"{system_message} {prompt}"
 
     llm = OpenAI(
-        model_name="gpt-4o",
-        temperature=0.5,
-        openai_api_key=api_key
+        model="gpt-4o",  # ✅ 正しいパラメータ名
+        temperature=0.5
     )
     response = llm(full_prompt)
     return response
 
-# 実行ボタン
+# ボタン処理
 if st.button("送信"):
     if prompt:
         answer = get_llm_response(prompt, expert)
