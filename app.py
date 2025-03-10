@@ -3,8 +3,12 @@ import streamlit as st
 from langchain.llms import OpenAI
 
 # 環境変数確認（デバッグ用、一部だけ表示）
-api_key = os.environ.get("OPENAI_API_KEY")
-st.write("🔑 API Key:", api_key[:5] + "..." if api_key else "❌ None")
+#api_key = os.environ.get("OPENAI_API_KEY")
+#st.write("🔑 API Key:", api_key[:5] + "..." if api_key else "❌ None")
+from dotenv import load_dotenv
+load_dotenv()
+import os
+api_key = os.getenv("OPENAI_API_KEY")
 
 # Streamlit UI
 st.title("LLMプロンプトフォーム")
