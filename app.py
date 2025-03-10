@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from dotenv import load_dotenv
-from langchain.chat_models import ChatOpenAI  # ✅ ChatOpenAI を利用
+from langchain.chat_models import ChatOpenAI  # ✅ Chatモデル
 
 # 環境変数を読み込む
 load_dotenv()
@@ -18,27 +18,25 @@ st.write("3. 送信ボタンをクリックすると、選択した専門家の�
 prompt = st.text_input("プロンプトを入力してください:")
 expert = st.radio("専門家の種類を選択してください", ("犬の専門家", "猫の専門家"))
 
-# LLM の応答を取得する関数
+# LLM 応答関数
 def get_llm_response(prompt, expert):
     if expert == "犬の専門家":
         system_message = "あなたは犬の専門家です。"
     else:
         system_message = "あなたは猫の専門家です。"
 
-    # メッセージ形式で渡す
     messages = [
         {"role": "system", "content": system_message},
         {"role": "user", "content": prompt}
     ]
 
-    # ✅ ChatOpenAI を利用し、APIキーは環境変数で自動読み込み
     llm = ChatOpenAI(
-        model="gpt-4o",  # 正しいフィールド名は model
-        temperature=0.5
+        model="gpt-4o",  # ✅ 最新方式は model
+        temperature=0.5,
+        openai_api_key=os.environ["OPENAI_API_KEY"]
     )
-
-    response = llm.invoke(messages)  # メッセージ形式で送信
-    return response.content  # 回答のテキスト部分を抽出
+    response = llm.invoke(messages)
+    return response.content
 
 # 送信ボタン
 if st.button("送信"):
