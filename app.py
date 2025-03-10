@@ -1,12 +1,18 @@
 import os
 import streamlit as st
 from dotenv import load_dotenv
-from langchain.chat_models import ChatOpenAI  # ✅ Chatモデル
-
-# 環境変数を読み込む
+import openai
+# OpenAIのAPIキーが設定されているか確認
+if "OPENAI_API_KEY" not in os.environ:
+    st.error("OpenAI APIキーが設定されていません。環境変数を確認してください。")
+    st.stop()
+# 環境変数読み込み
 load_dotenv()
 
-# Streamlit の UI 設計
+# OpenAI APIキー
+openai.api_key = os.environ["OPENAI_API_KEY"]
+
+# StreamlitのUI
 st.title("LLMプロンプトフォーム")
 st.write("このウェブアプリでは、入力フォームにテキストを入力し、専門を選択すると、選択した専門家としての回答が表示されます。")
 st.write("操作方法:")
@@ -30,13 +36,14 @@ def get_llm_response(prompt, expert):
         {"role": "user", "content": prompt}
     ]
 
-    llm = ChatOpenAI(
-        model="gpt-4o",  # ✅ 最新方式は model
-        temperature=0.5,
-        openai_api_key=os.environ["OPENAI_API_KEY"]
+    # OpenAI公式APIで呼び出し
+    response = openai.chat.completions.create(
+        model="gpt-4o",
+        messages=messages,
+        temperature=0.5
     )
-    response = llm.invoke(messages)
-    return response.content
+
+    return response.choices[0].message.content
 
 # 送信ボタン
 if st.button("送信"):
