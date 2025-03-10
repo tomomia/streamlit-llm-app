@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from dotenv import load_dotenv
-from langchain_community.llms import OpenAI  # ✅ 推奨される場所からインポート
+from langchain.chat_models import ChatOpenAI  # ✅ ChatOpenAI を利用
 
 # 環境変数を読み込む
 load_dotenv()
@@ -25,16 +25,20 @@ def get_llm_response(prompt, expert):
     else:
         system_message = "あなたは猫の専門家です。"
 
-    full_prompt = f"{system_message} {prompt}"
+    # メッセージ形式で渡す
+    messages = [
+        {"role": "system", "content": system_message},
+        {"role": "user", "content": prompt}
+    ]
 
-    # ✅ langchain_community.llms.OpenAI を使ってAPIキーは自動的に環境変数から読み込む
-    llm = OpenAI(
-        model_name="gpt-4o",  # 使用するモデル
+    # ✅ ChatOpenAI を利用し、APIキーは環境変数で自動読み込み
+    llm = ChatOpenAI(
+        model="gpt-4o",  # 正しいフィールド名は model
         temperature=0.5
     )
-    response = llm(full_prompt)  # プロンプトを直接渡して実行
-    
-    return response
+
+    response = llm.invoke(messages)  # メッセージ形式で送信
+    return response.content  # 回答のテキスト部分を抽出
 
 # 送信ボタン
 if st.button("送信"):
