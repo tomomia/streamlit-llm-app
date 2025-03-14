@@ -5,7 +5,9 @@ from langchain.chat_models import ChatOpenAI  # ✅ チャットモデル対応
 
 # 環境変数読み込み
 load_dotenv()
-api_key = os.getenv("OPENAI_API_KEY")
+#api_key = os.getenv("OPENAI_API_KEY")
+#環境変数読み込み変更 3/14
+openai_api_key = st.secrets["OPENAI"]["openai_api_key"]
 
 # Streamlit UI
 st.title("LLMプロンプトフォーム")
@@ -14,7 +16,7 @@ expert = st.radio("専門家を選んでください", ("犬の専門家", "猫�
 
 # LLM呼び出し関数
 def get_llm_response(prompt, expert):
-    if not api_key:
+    if not openai_api_key:
         return "❌ APIキーが見つかりません"
 
     system_message = "あなたは犬の専門家です。" if expert == "犬の専門家" else "あなたは猫の専門家です。"
@@ -22,7 +24,7 @@ def get_llm_response(prompt, expert):
     llm = ChatOpenAI(
         model="gpt-4o",  
         temperature=0.5,
-        openai_api_key=api_key  
+        openai_api_key=openai_api_key  
     )
 
     messages = [
