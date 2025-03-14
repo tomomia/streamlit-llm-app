@@ -7,7 +7,7 @@ from langchain.chat_models import ChatOpenAI  # ✅ チャットモデル対応
 load_dotenv()
 #api_key = os.getenv("OPENAI_API_KEY")
 #環境変数読み込み変更 3/14
-openai_api_key = st.secrets["OPENAI"]["openai_api_key"]
+openai_api_key = st.secrets["openai_api_key"]
 
 # Streamlit UI
 st.title("LLMプロンプトフォーム")
